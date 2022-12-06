@@ -5,25 +5,28 @@ import Header from './Header';
 import InputTodo from './InputTodo';
 
 class TodoContainer extends React.Component {
-  state = {
-    todos: [
-      {
-        id: uuidv4(),
-        title: 'Setup development environment',
-        completed: true,
-      },
-      {
-        id: uuidv4(),
-        title: 'Develop website and add content',
-        completed: false,
-      },
-      {
-        id: uuidv4(),
-        title: 'Deploy to live server',
-        completed: false,
-      },
-    ],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      todos: [
+        {
+          id: uuidv4(),
+          title: 'Setup development environment',
+          completed: true,
+        },
+        {
+          id: uuidv4(),
+          title: 'Develop website and add content',
+          completed: false,
+        },
+        {
+          id: uuidv4(),
+          title: 'Deploy to live server',
+          completed: false,
+        },
+      ],
+    };
+  }
 
   handleChange = (id) => {
     this.setState((prevState) => ({
@@ -37,41 +40,46 @@ class TodoContainer extends React.Component {
         return todo;
       }),
     }));
-  };
+  }
 
   delTodo = (id) => {
+    const { todos } = this.state;
     this.setState({
       todos: [
-        ...this.state.todos.filter((todo) => todo.id !== id),
+        ...todos.filter((todo) => todo.id !== id),
       ],
     });
   };
 
   addTodoItem = (title) => {
+    const { todos } = this.state;
     const newTodo = {
-      id: 4,
+      id: uuidv4(),
       title,
       completed: false,
     };
     this.setState({
-      todos: [...this.state.todos, newTodo],
+      todos: [...todos, newTodo],
     });
   };
 
   render() {
+    const { todos } = this.state;
+    const { handleChange, delTodo, addTodoItem } = this;
     return (
       <div className="container">
         <div className="inner">
           <Header />
-          <InputTodo addTodoProps={this.addTodoItem} />
+          <InputTodo addTodoProps={addTodoItem} />
           <TodosList
-            todos={this.state.todos}
-            handleChangeProps={this.handleChange}
-            deleteTodoProps={this.delTodo}
+            todos={todos}
+            handleChangeProps={handleChange}
+            deleteTodoProps={delTodo}
           />
         </div>
       </div>
     );
   }
 }
+
 export default TodoContainer;
